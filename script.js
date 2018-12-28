@@ -21,7 +21,7 @@ connection.connect(function (error) {
     if (!!error) {
         console.log('Error')
     } else {
-        console.log('Connected')
+        console.log('Conectado')
     }
 });
 
@@ -30,9 +30,9 @@ app.get('/', function(req, res){
     connection.query("select * from curso", function(error, rows, fields){
         //Callback ...
         if(!!error){
-            console.log('Error en la query')
+            console.log('Error en la peticion')
         } else {
-            console.log('Successful Query')
+            console.log('Peticion correcta')
             console.log(rows)
             res.render('index', {records: rows})
         }
