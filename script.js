@@ -1,6 +1,12 @@
 var express = require('express')
 var app = express()
 var mysql = require('mysql')
+//var routes = require('./routes/routes')
+
+app.use(express.static(__dirname+'/public'))
+//app.use('/', routes)
+app.set('views', __dirname+"/views")
+app.set('view engine', 'ejs')
 
 var connection = mysql.createConnection({
     ///Properties ...
@@ -28,7 +34,7 @@ app.get('/', function(req, res){
         } else {
             console.log('Successful Query')
             console.log(rows)
-            res.send('Hola mundo: '+rows[1].descripcion)
+            res.render('index', {records: rows})
         }
     });
 });
