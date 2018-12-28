@@ -8,35 +8,34 @@ app.use(express.static(__dirname+'/public'))
 app.set('views', __dirname+"/views")
 app.set('view engine', 'ejs')
 
-var connection = mysql.createConnection({
+var connection = mysql.createPool({
     ///Properties ...
+    connectionLimit: 50,
     host:'localhost',
     user: 'root',
     password: '',
     database: 'playtec'
 });
 
-connection.connect(function (error) {
-    //callback ...
-    if (!!error) {
-        console.log('Error')
-    } else {
-        console.log('Conectado')
-    }
-});
-
 app.get('/', function(req, res){
     //About mysql ...
-    connection.query("select * from curso", function(error, rows, fields){
-        //Callback ...
+    connection.getConnection(function(error, tempCont){
         if(!!error){
-            console.log('Error en la peticion')
+            tempCont.release()
+            console.log('Error')
         } else {
-            console.log('Peticion correcta')
-            console.log(rows)
-            res.render('index', {records: rows})
+            console.log('Conectado!')
+            tempCont.query('select * from curso', function(error, rows, fields){
+                tempCont.release()
+                if(!!error){
+                    console.log('Error en la peticion')
+                } else {
+                    console.log(rows)
+                    res.render('index', {records: rows})
+                }
+            })
         }
-    });
+    })
 });
 
 app.listen(9000)
